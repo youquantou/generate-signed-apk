@@ -1,8 +1,8 @@
-Ç©ÃûÊ±³öÏÖ´íÎó Lint found fatal errors while assembling a release target.
+ç­¾åæ—¶å‡ºç°é”™è¯¯ Lint found fatal errors while assembling a release target.
 
 android {
     compileSdkVersion 23
-    buildToolsVersion ¡ä25.0.0¡ä
+    buildToolsVersion â€²25.0.0â€²
 
     defaultConfig {
         applicationId "com.luzhiyao.sgongdoocar"
@@ -13,8 +13,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile(¡äproguard-android.txt¡ä), ¡äproguard-rules.pro¡ä
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile(â€²proguard-android.txtâ€²), â€²proguard-rules.proâ€²
         }
     }
 
