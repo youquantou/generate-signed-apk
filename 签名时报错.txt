@@ -1,26 +1,82 @@
 签名时出现错误 Lint found fatal errors while assembling a release target.
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion ′25.0.0′
-
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\w\\Desktop\\insoft_apk_1.jks')
+            storePassword '123456'
+            keyAlias = 'insoft'
+            keyPassword '123456'
+        }
+    }
+    compileSdkVersion 28
     defaultConfig {
-        applicationId "com.luzhiyao.sgongdoocar"
-        minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 5
-        versionName "1.1.0"
+        applicationId "org.dp.facedetection"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_ARM_NEON=TRUE"
+                abiFilters "armeabi-v7a"
+            }
+        }
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi-v7a'
+        }
     }
     buildTypes {
         release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            //混淆
             minifyEnabled true
-            proguardFiles getDefaultProguardFile(′proguard-android.txt′), ′proguard-rules.pro′
+            //Zipalign优化
+            zipAlignEnabled true
+
+            // 移除无用的resource文件
+            shrinkResources true
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
-
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+    sourceSets.main {
+        jni.srcDirs = []
+        jniLibs.srcDir "libs"
+    }
     //Add the following configuration
     lintOptions {
-        checkReleaseBuilds false
+//        checkReleaseBuilds false
         abortOnError false
     }
 }
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
+    implementation 'androidx.core:core-ktx:1.1.0-alpha04'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    implementation project(':openCVLibrary401')
+    implementation 'com.squareup.okhttp3:okhttp:4.0.0-alpha02'
+    implementation files('libs\\OTG.jar')
+    implementation files('libs\\hutool-all-4.5.11.jar')
+}
+
